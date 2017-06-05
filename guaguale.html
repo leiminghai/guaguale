@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		  canvas{
+            border: 1px solid #000;
+	            display: block;
+	            margin: 0 auto;
+	            background-size: 500px 500px;
+	        }
+	</style>
+</head>
+<body>
+	<canvas id='canvas' width='500px' height='500px'></canvas>
+	<!-- <button onclick = "oneceMore()">再刮一次</button> -->
+	<script type="text/javascript">
+		var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext("2d");//返回一个对象，该对象提供了用于在画布上绘图的方法和属性
+		var w = canvas.width;
+			h = canvas.height;
+		//随机产生奖品
+		var prize =['iphone7P', '很遗憾。再接再厉', '女朋友一个', '很遗憾。再接再厉', '很遗憾。再接再厉', '美女一枚', '很遗憾。再接再厉', '很遗憾。再接再厉', '啥都没有', '啥都没有','美女一枚' ];
+		// function oneceMore(){
+		var relPrize = prize[Math.floor(Math.random()*prize.length)];
+		// 	return relPrize;
+		// }
+		// 绘制奖品信息
+		ctx.font = 'bold 30px 微软雅黑';
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';//设置或返回在绘制文本时使用的当前文本基线
+		ctx.fillText(relPrize,w/2,h/2);
+		//将奖品信息装换成背景图
+		var dataUrl = canvas.toDataURL('image/png',1);
+		canvas.style.background = 'url('+ dataUrl +')';
+		ctx.clearRect(0,0,w,h);//在给定的矩形内清除指定的像素
+		
+		//定义涂层
+		ctx.fillStyle = 'red';
+		ctx.fillRect(0,0,w,h)//绘制“被填充”的矩形
+
+		var flag = false;
+		canvas.addEventListener('mousedown',function(e){
+			flag = true;
+			//抹去涂层
+			ctx.globalCompositeOperation = 'destination-out';//源图像外显示目标图像。只有源图像外的目标图像部分会被显示，源图像是透明的。
+		})
+		canvas.addEventListener('mousemove',function(e){
+			if (flag) {
+					var x = e.clientX - canvas.offsetLeft;
+					var y = e.clientY - canvas.offsetTop;
+					ctx.beginPath();
+					ctx.fillRect(x,y,20,20);
+					ctx.fill()//绘制当前绘制图
+				}			
+		})
+		canvas.addEventListener('mouseup',function(e){
+			flag = false;
+			ctx.globalCompositeOperation = 'source-over';//默认。在目标图像上显示源图像
+		})
+	</script>
+</body>
+</html>
